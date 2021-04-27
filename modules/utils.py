@@ -55,38 +55,50 @@ class Utils:
                 		routers.append(Router(i.id,i.name,router_gateway,router_interfaces))
 		return routers
 
+	def server_pat_routers(self, vm_routers, server, ip):
+		
+		tables = []
+		for vm_router in vm_routers:
+			table = PrettyTable()
+                	table.field_names = ["Server", "Server Ip Address", "Server Port Opened",
+                                     	     "Router Port Opened", "Router name", "Gateway"]
+			
+			gateway = vm_router.router_gateway.fixed_ips[0]['ip_address']
+                        qrouter = 'qrouter-' + vm_router.router_id
+                        x = requests.get('http://controller:3000/router_vm_ports?router={}&server={}'.format(qrouter, ip)).json()          
+                        for key,value in x.items():
+                                table.add_row([server.name, ip , key, value, vm_router.router_name,gateway])
+			tables.append({ "name": vm_router.router_name, "table": table })		
+		for i in tables:
+			print('Router [{}]').format(i['name'])
+			print(i['table'])
+
 	# Create Port Address Translation.
 	def create_pat(self):
 
 		try:
 			server = self.choose_server()
-			vm_routers = self.vm_topo(server)	
+			vm_routers = self.vm_topo(server)
+			ip = None
+			if (len(server.addresses) == 1):
+				ip = server.addresses[list(server.addresses.keys())[0]][0]['addr']	
+		        else:		
+				ip = raw_input('Choose interface address server? ')
+			if (server.name != self.get_vm_name_by_ip(ip)):
+				raise Exception('Incorrect ip')
+			self.server_pat_routers(vm_routers, server, ip)
 
-			# input	
-			ip = raw_input('Enter the IP of vm: ')
-					
 			router_name = raw_input('Enter the name of router: ')
-			# interface = raw_input('Enter the interface ip of router: ')  # if you want explicit the snat, using masquerade instead of snat
-			# check router
 			router = next((i for i in vm_routers if i.router_name == router_name),None)		
 			if router is None:
 				raise Exception('Router not existed')
-			else:	
+			else:
 				gateway = router.router_gateway.fixed_ips[0]['ip_address']
 				qrouter = 'qrouter-' +router.router_id
-		
-				x = requests.get('http://controller:3000/router_vm_ports?router={}&server={}'.format(qrouter, ip)).json()		
-				table = PrettyTable()
-                		table.field_names = ["Server", "Server Ip Address", "Server Port Opened",
-						     "Router Port Opened", "Router name", "Gateway"]
-                		table.sortby = 'Server Port Opened'
-                		for key,value in x.items():
-                        		table.add_row([server.name, ip , key, value, router.router_name,gateway])
-                		print(table)
-			
-			vmport = raw_input('Server port you want to open? ')
-			y = requests.post('http://controller:3000/add?server={}&router={}&vmport={}&gateway={}'.format(ip,qrouter,vmport,gateway))
-			print(y.text)
+				vmport = raw_input('Server port you want to open? ')
+				y = requests.post('http://controller:3000/add?server={}&router={}&vmport={}&gateway={}'.format(ip,
+						qrouter,vmport,gateway))
+				print(y.text)
 		except Exception as e:
 			print(e)
 		finally:
@@ -99,33 +111,28 @@ class Utils:
 		try:
 			server = self.choose_server()
 	  		vm_routers = self.vm_topo(server)
+			ip = None
+                        if (len(server.addresses) == 1):
+                                ip = server.addresses[list(server.addresses.keys())[0]][0]['addr']
+                        else:
+                                ip = raw_input('Choose interface address server? ')
 
-			# input
-			ip = raw_input('Enter the IP of vm: ')
+			if (server.name != self.get_vm_name_by_ip(ip)):
+                                raise Exception('Incorrect ip')
+			self.server_pat_routers(vm_routers, server, ip)
+
 			router_name = raw_input('Enter the name of router: ')
 		
 			router = next((i for i in vm_routers if i.router_name == router_name),None)			
-			#if router is None:
-                        #        raise Exception('Router not existed')
-			#qrouter = 'qrouter-' + router.router_id
-			gateway = router.router_gateway.fixed_ips[0]['ip_address']
-			arr = []
-			for vm_router in vm_routers:
-				_qrouter = 'qrouter-' + vm_router.router_id
-				x = requests.get('http://controller:3000/router_vm_ports?router={}&server={}'.format(_qrouter, ip)).json()
-				arr.append(x)
-                        table = PrettyTable()
-                        table.field_names = ["Server", "Server Ip Address", "Server Port Opened" , "Router Port Opened", "Router name", "Gateway"]
-                        table.sortby = 'Server Port Opened'
-			for i in arr:
-                        	for key,value in i.items():
-                                	table.add_row([server.name, ip , key, value, router.router_name, gateway])
-                        print(table)
-		
-			#vmport = raw_input('Enter port vm: ')
-			#new_router_port = raw_input('Enter new router port: ')
-			#remove_response = requests.post('http://controller:3000/modify?server={}&router={}&new_router_port={}&vmport={}&gateway={}'.format(ip,qrouter,new_router_port,vmport,gateway))
-                        #print(remove_response.text)
+			if router is None:
+                                raise Exception('Router not existed')
+			else:
+				qrouter = 'qrouter-' + router.router_id
+				gateway = router.router_gateway.fixed_ips[0]['ip_address']
+				vmport = raw_input('What server port you want to change? ')
+				new_router_port = raw_input('New router port? ')
+				modify_response = requests.post('http://controller:3000/modify?server={}&router={}&new_router_port={}&vmport={}&gateway={}'.format(ip,qrouter,new_router_port,vmport,gateway))
+                        	print(modify_response.text)
 
 		except Exception as e:
 			print(e)
@@ -141,31 +148,28 @@ class Utils:
 			server = self.choose_server()
                 	vm_routers = self.vm_topo(server)
 
-	                ip = raw_input('Enter the IP of vm: ')
+			ip = None
+                        if (len(server.addresses) == 1):
+                                ip = server.addresses[list(server.addresses.keys())[0]][0]['addr']
+                        else:
+                                ip = raw_input('Choose interface address server? ')
+
+			if (server.name != self.get_vm_name_by_ip(ip)):
+                                raise Exception('Incorrect ip')
+			self.server_pat_routers(vm_routers, server, ip)
+
                 	router_name = raw_input('Enter the name of router: ')
                		router = next((i for i in vm_routers if i.router_name == router_name),None)		
 			if router is None:
                                 raise Exception('Router not existed')
+			else:
+				gateway = router.router_gateway.fixed_ips[0]['ip_address']
+              			qrouter = 'qrouter-' + router.router_id
+                		vmport = raw_input('Enter server port you want to remove?: ')
 
-
-			gateway = router.router_gateway.fixed_ips[0]['ip_address']
-              		qrouter = 'qrouter-' + router.router_id
+				remove_response = requests.post('http://controller:3000/remove?server={}&router={}&vmport={}&gateway={}'.format(ip,qrouter,vmport,gateway))
+				print(remove_response.text)
 			
-			x = requests.get('http://controller:3000/router_vm_ports?router={}&server={}'.format(qrouter, ip)).json()
-                        table = PrettyTable()
-                        table.field_names = ["Server", "Server Ip Address", "Server Port Opened" , "Router Port Opened", "Router name", "Gateway"]
-                        table.sortby = 'Server Port Opened'
-                        for key,value in x.items():
-                                table.add_row([server.name, ip , key, value, router.router_name, gateway])
-                        print(table)
-
-			
-                	vmport = raw_input('Enter server port you want to remove?: ')
-
-			remove_response = requests.post('http://controller:3000/remove?server={}&router={}&vmport={}&gateway={}'.format(ip,qrouter,vmport,gateway))
-			print(remove_response.text)
-			
-
 		except Exception as e:
 			print(e)
 		finally:
@@ -252,30 +256,37 @@ class Utils:
 			}
 			func = switcher.get(choice,self.invalid)()
 
+	# get server name by ip
 	def get_vm_name_by_ip(self,server_ip_address):
 		ports = self.conn.network.ports()
        		port = next((i for i in ports if i['fixed_ips'][0]['ip_address'] == server_ip_address),None)
 		if port is None:
-			return 'None'
+			return 'Undefined'
 		server = self.conn.get_server_by_id(port.device_id)
 		return server.name
 
 	def show_router_ports(self):
 		routers = self.conn.network.routers(project_id = self.conn.current_project_id ) 	
-		print('Router list')
-		for i,router in enumerate(routers):
-			print('{}:{}').format(i,router.name)
-		router_name = raw_input('Enter router name')
-		_router_ = next(( i for i in self.conn.network.routers(project_id = self.conn.current_project_id ) if i.name == router_name),None)
-		qrouter = 'qrouter-' + _router_.id
-		x = requests.get('http://controller:3000/router_ports?router={}'.format(qrouter)).json()
-		table = PrettyTable()
-		table.field_names = ["Server", "Server IP", "Server Port", "Router Port"]
-		table.sortby = 'Server'
-		for key,value in x.items():
-			server_name = self.get_vm_name_by_ip(key[:-3])
-			table.add_row([server_name,key[:-3],key[-2:],value])
-		print(table)
+		clear()
+
+		tables = [] 
+		for router in routers: 
+			qrouter = 'qrouter-' + router.id
+			x = requests.get('http://controller:3000/router_ports?router={}'.format(qrouter)).json()
+			table = PrettyTable()
+			table.field_names = ["Server", "Server IP", "Server Port", "Router Port",
+				     	     "Router name", "Gateway" ]
+		        table.sortby = 'Router name'
+			for key,value in x.items():
+				
+				server_name = self.get_vm_name_by_ip(key.split(":")[0])
+				table.add_row([server_name,key.split(":")[0], key.split(":")[1], value,
+				      router.name, router.external_gateway_info['external_fixed_ips'][0]['ip_address']])
+			tables.append({"name":router.name, "table":table})	
+		
+		for x in tables:
+			print(x['name'])	
+			print(x['table'])
 		_exit = raw_input('Enter anything')
 
 
