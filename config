@@ -1,0 +1,6 @@
+[config]
+user_domain_name = Default
+project_domain_name = Default
+auth_url = http://controller:5000/v3
+region_name = RegionOne
+identity_api_version = 3
