@@ -11,7 +11,7 @@ clouds:
     auth:
       auth_url: http://192.168.0.105:5000/v3/
       username: "duclam"
-      password: "ndl_0"
+      password: "ndl_0975645560"
       project_id: 2e17440f89d643bfb89f06e24f80c7d7
       project_name: "mmt"
       user_domain_name: "Default"
@@ -22,7 +22,7 @@ clouds:
     auth:
       auth_url: http://192.168.0.105:5000/v3/
       username: "duclam"
-      password: "ndl_0"
+      password: "ndl_0975645560"
       project_id: 2e17440f89d643bfb89f06e24f80c7d7
       project_name: "mmt"
       user_domain_name: "Default"
