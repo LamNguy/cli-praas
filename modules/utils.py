@@ -96,7 +96,7 @@ class Utils:
 				gateway = router.router_gateway.fixed_ips[0]['ip_address']
 				qrouter = 'qrouter-' +router.router_id
 				vmport = raw_input('Server port you want to open? ')
-				y = requests.post('http://controller:3000/add?server={}&router={}&vmport={}&gateway={}'.format(ip,
+				y = requests.post('http://controller:3000/pat/add?server={}&router={}&vmport={}&gateway={}'.format(ip,
 						qrouter,vmport,gateway))
 				print(y.text)
 		except Exception as e:
@@ -131,7 +131,7 @@ class Utils:
 				gateway = router.router_gateway.fixed_ips[0]['ip_address']
 				vmport = raw_input('What server port you want to change? ')
 				new_router_port = raw_input('New router port? ')
-				modify_response = requests.post('http://controller:3000/modify?server={}&router={}&new_router_port={}&vmport={}&gateway={}'.format(ip,qrouter,new_router_port,vmport,gateway))
+				modify_response = requests.post('http://controller:3000/pat/modify?server={}&router={}&new_router_port={}&vmport={}&gateway={}'.format(ip,qrouter,new_router_port,vmport,gateway))
                         	print(modify_response.text)
 
 		except Exception as e:
@@ -167,7 +167,7 @@ class Utils:
               			qrouter = 'qrouter-' + router.router_id
                 		vmport = raw_input('Enter server port you want to remove?: ')
 
-				remove_response = requests.post('http://controller:3000/remove?server={}&router={}&vmport={}&gateway={}'.format(ip,qrouter,vmport,gateway))
+				remove_response = requests.post('http://controller:3000/pat/remove?server={}&router={}&vmport={}&gateway={}'.format(ip,qrouter,vmport,gateway))
 				print(remove_response.text)
 			
 		except Exception as e:
@@ -272,7 +272,7 @@ class Utils:
 		tables = [] 
 		for router in routers: 
 			qrouter = 'qrouter-' + router.id
-			x = requests.get('http://controller:3000/router_ports?router={}'.format(qrouter)).json()
+			x = requests.get('http://controller:3000/router_allports?router={}'.format(qrouter)).json()
 			table = PrettyTable()
 			table.field_names = ["Server", "Server IP", "Server Port", "Router Port",
 				     	     "Router name", "Gateway" ]
