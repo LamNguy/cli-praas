@@ -4,3 +4,11 @@ project_domain_name = Default
 auth_url = http://controller:5000/v3
 region_name = RegionOne
 identity_api_version = 3
+
+[api]
+remove_pat = http://controller:3000/pat/remove
+router_server_pat = http://controller:3000/router_server_pat
+create_pat = http://controller:3000/pat/create
+modify_pat = http://controller:3000/pat/modify
+router_pat = http://controller:3000/router_pat
+

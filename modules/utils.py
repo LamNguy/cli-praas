@@ -14,23 +14,42 @@ class Utils:
 		self.select = True
 		self.config = config
 		
+		
+
+	def select_ip (self, server):
+		if len(server.addresses) == 1:
+			server_ip =  server.addresses[list(server.addresses.keys())[0]][0]['addr']	
+		else:
+			server_ip = raw_input('Choose interface address server? ')
+			if (server.name != self.get_server_name_by_ip(server_ip)):
+                        	raise Exception('Incorrect ip')
+		return server_ip
+	
+	def select_router (self,server_routers):
+		router_name = raw_input('Enter the name of router: ')
+                router = next((i for i in server_routers if i.router_name == router_name),None)
+		if router is None:
+                	raise Exception('Router is not existed')
+		return router
+
 	# Get servers's metadata. 
 	def get_servers(self):
-		return [dict( index=index , name = s.name , id=s.id )  for (index,s) in enumerate(self.conn.compute.servers())]
+		return [dict( index=index , name = s.name ,
+			ips = [ s.addresses[i][0]['addr'] for i  in s.addresses.keys()])  for (index,s) in enumerate(self.conn.compute.servers())]
 
 	# Display list of servers and choose server.
 	def choose_server(self):
 		print('Listing servers in project')
 		table = PrettyTable()
-                table.field_names = ["Number", "Server name", "Server id"]
+                table.field_names = ["Number", "Server name", "Server ip"]
 
 		for s in self.get_servers():
-			table.add_row([s['index'], s['name'], s['id']])	
+			table.add_row([s['index'], s['name'], ','.join(s['ips'])])	
 		print(table)
 		choose = raw_input('Choose server name?: ')
 		server = next(( s for s in self.conn.compute.servers() if s.name == choose ),None)
 		if server is None:
-			raise Exception('Vm not existed')
+			raise Exception('Server is not existed')
 		return server 
 	
 	# Get networks'id which belong to a server. 
@@ -55,50 +74,53 @@ class Utils:
                 		routers.append(Router(i.id,i.name,router_gateway,router_interfaces))
 		return routers
 
-	def server_pat_routers(self, vm_routers, server, ip):
+	# pat information of a server on routers
+	def server_pat_routers(self, server_routers, server, ip):
 		
-		tables = []
-		for vm_router in vm_routers:
+		for router in server_routers:
 			table = PrettyTable()
-                	table.field_names = ["Server", "Server Ip Address", "Server Port Opened",
-                                     	     "Router Port Opened", "Router name", "Gateway"]
+                	table.field_names = ["Server", "Ip Address", "Server Port",
+                                    	     "Router Port", "Router", "Gateway"]
 			
-			gateway = vm_router.router_gateway.fixed_ips[0]['ip_address']
-                        qrouter = 'qrouter-' + vm_router.router_id
-                        x = requests.get('http://controller:3000/router_vm_ports?router={}&server={}'.format(qrouter, ip)).json()          
-                        for key,value in x.items():
-                                table.add_row([server.name, ip , key, value, vm_router.router_name,gateway])
-			tables.append({ "name": vm_router.router_name, "table": table })		
-		for i in tables:
-			print('Router [{}]').format(i['name'])
-			print(i['table'])
+			gateway = router.router_gateway.fixed_ips[0]['ip_address']
+			payload = {
+				'router': 'qrouter-' + router.router_id,
+				'server': ip
+			}
+			url = self.config['api']['router_server_pat']
+                        x = requests.get(url = url, params = payload)          
+                        for key,value in x.json().iteritems():
+                                table.add_row([server.name, ip , key, value, router.router_name ,gateway])
+			print('Router [{}]').format(router.router_name)
+                        print(table)
+
 
 	# Create Port Address Translation.
-	def create_pat(self):
+	def create_pat_request(self):
 
 		try:
 			server = self.choose_server()
-			vm_routers = self.vm_topo(server)
-			ip = None
-			if (len(server.addresses) == 1):
-				ip = server.addresses[list(server.addresses.keys())[0]][0]['addr']	
-		        else:		
-				ip = raw_input('Choose interface address server? ')
-			if (server.name != self.get_vm_name_by_ip(ip)):
-				raise Exception('Incorrect ip')
-			self.server_pat_routers(vm_routers, server, ip)
+			server_routers = self.vm_topo(server)
 
-			router_name = raw_input('Enter the name of router: ')
-			router = next((i for i in vm_routers if i.router_name == router_name),None)		
-			if router is None:
-				raise Exception('Router not existed')
-			else:
-				gateway = router.router_gateway.fixed_ips[0]['ip_address']
-				qrouter = 'qrouter-' +router.router_id
-				vmport = raw_input('Server port you want to open? ')
-				y = requests.post('http://controller:3000/pat/add?server={}&router={}&vmport={}&gateway={}'.format(ip,
-						qrouter,vmport,gateway))
-				print(y.text)
+			# select server ip
+			ip = self.select_ip(server) 
+
+			# show pat information of the server on the server routers.
+			self.server_pat_routers(server_routers, server, ip)
+			
+			# select router in server routers
+			router = self.select_router(server_routers)
+				
+			server_port = raw_input('Server port you want to open? ') 
+			payload = {
+			    	'server_ip': ip,
+				'router_id': 'qrouter-' + router.router_id,
+    				'create_server_port': server_port,
+    				'gateway': router.router_gateway.fixed_ips[0]['ip_address']
+			}
+			url = self.config['api']['create_pat']
+			create_response = requests.post(url = url, params = payload)
+			print(create_response.text)
 		except Exception as e:
 			print(e)
 		finally:
@@ -106,33 +128,34 @@ class Utils:
 
  	# modify port vm which has opened
 	# querry all vm port on all router
-	def modify_pat(self):
+	def modify_pat_request(self):
 
 		try:
 			server = self.choose_server()
-	  		vm_routers = self.vm_topo(server)
-			ip = None
-                        if (len(server.addresses) == 1):
-                                ip = server.addresses[list(server.addresses.keys())[0]][0]['addr']
-                        else:
-                                ip = raw_input('Choose interface address server? ')
+                        server_routers = self.vm_topo(server)
 
-			if (server.name != self.get_vm_name_by_ip(ip)):
-                                raise Exception('Incorrect ip')
-			self.server_pat_routers(vm_routers, server, ip)
+                        # select server ip
+                        ip = self.select_ip(server) 
 
-			router_name = raw_input('Enter the name of router: ')
-		
-			router = next((i for i in vm_routers if i.router_name == router_name),None)			
-			if router is None:
-                                raise Exception('Router not existed')
-			else:
-				qrouter = 'qrouter-' + router.router_id
-				gateway = router.router_gateway.fixed_ips[0]['ip_address']
-				vmport = raw_input('What server port you want to change? ')
-				new_router_port = raw_input('New router port? ')
-				modify_response = requests.post('http://controller:3000/pat/modify?server={}&router={}&new_router_port={}&vmport={}&gateway={}'.format(ip,qrouter,new_router_port,vmport,gateway))
-                        	print(modify_response.text)
+                        # show pat information of the server on the server routers.
+                        self.server_pat_routers(server_routers, server, ip)
+
+                        # select router in server routers
+                        router = self.select_router(server_routers)
+			server_port = raw_input('Server port you want to change? ')
+                        new_router_port = raw_input('Modify router port? ')
+
+			payload = {
+                                'server_ip': ip,
+                                'router_id': 'qrouter-' + router.router_id,
+                                'modify_server_port': server_port,
+				'modify_router_port': new_router_port,
+                                'gateway': router.router_gateway.fixed_ips[0]['ip_address']
+                        }
+	
+			url = self.config['api']['modify_pat']
+			modify_response = requests.post(url = url, params = payload)
+                        print(modify_response.text)
 
 		except Exception as e:
 			print(e)
@@ -142,40 +165,39 @@ class Utils:
 
 	# remove port vm which has opened
 	# quet tat ca cac thong tin cua router de tim vm port
-	def remove_pat(self):
+	def remove_pat_request(self):
 		
 		try:
 			server = self.choose_server()
-                	vm_routers = self.vm_topo(server)
+                        server_routers = self.vm_topo(server)
 
-			ip = None
-                        if (len(server.addresses) == 1):
-                                ip = server.addresses[list(server.addresses.keys())[0]][0]['addr']
-                        else:
-                                ip = raw_input('Choose interface address server? ')
+                        # select server ip
+                        ip = self.select_ip(server)
 
-			if (server.name != self.get_vm_name_by_ip(ip)):
-                                raise Exception('Incorrect ip')
-			self.server_pat_routers(vm_routers, server, ip)
+                        # show pat information of the server on the server routers.
+                        self.server_pat_routers(server_routers, server, ip)
 
-                	router_name = raw_input('Enter the name of router: ')
-               		router = next((i for i in vm_routers if i.router_name == router_name),None)		
-			if router is None:
-                                raise Exception('Router not existed')
-			else:
-				gateway = router.router_gateway.fixed_ips[0]['ip_address']
-              			qrouter = 'qrouter-' + router.router_id
-                		vmport = raw_input('Enter server port you want to remove?: ')
+                        # select router in server routers
+                        router = self.select_router(server_routers)
 
-				remove_response = requests.post('http://controller:3000/pat/remove?server={}&router={}&vmport={}&gateway={}'.format(ip,qrouter,vmport,gateway))
-				print(remove_response.text)
+                        server_port = raw_input('Server port you want to remove? ')
+			payload = {
+                                'server_ip': ip,
+                                'router_id': 'qrouter-' + router.router_id,
+                                'remove_server_port': server_port,
+                                'gateway': router.router_gateway.fixed_ips[0]['ip_address']
+                        }
+		
+			url = self.config['api']['remove_pat']
+			remove_response = requests.post(url= url, params = payload)
+			print(remove_response.text)
 			
 		except Exception as e:
 			print(e)
 		finally:
 			_exit = raw_input('Press any thing to continue')
 	# show instance's network topology
-	def network_topo(self):
+	def server_topology(self):
 		try:
 			clear()
 			server = self.choose_server()
@@ -241,15 +263,16 @@ class Utils:
 			self.change_project()
 		while self.select:
 			clear()
-			print('Welcome user: [{}]\nCurrent Project: [{}]\n').format(self.conn.identity.get_user(self.conn.current_user_id).name,self.conn.current_project.name)
-			print('TABLE OF OPTIONS\n1. Add Port Address Translation\n2. Modify PAT\n3. Remove PAT\n4. Router checking\n5. Server network topology\n6. Change project\n7. Change user\n8. Quit')
+			print('Welcome user: [{}]\nCurrent Project: [{}]').format(
+				self.conn.identity.get_user(self.conn.current_user_id).name,self.conn.current_project.name)
+			print('TABLE OF OPTIONS\n1. Add PAT\n2. Modify PAT\n3. Remove PAT\n4. Manage Router PAT\n5. Server Network Topology\n6. Change project\n7. Change user\n8. Quit')
 			choice = raw_input('Option number? ')
 			switcher = {
-				'1': self.create_pat,
-				'2': self.modify_pat,
-				'4': self.show_router_ports,
-				'3': self.remove_pat,
-				'5': self.network_topo,
+				'1': self.create_pat_request,
+				'2': self.modify_pat_request,
+				'4': self.manage_routers_pat,
+				'3': self.remove_pat_request,
+				'5': self.server_topology,
 				'6': self.change_project,
 				'7': self.change_user,
 				'8': self.quit 
@@ -257,7 +280,7 @@ class Utils:
 			func = switcher.get(choice,self.invalid)()
 
 	# get server name by ip
-	def get_vm_name_by_ip(self,server_ip_address):
+	def get_server_name_by_ip(self,server_ip_address):
 		ports = self.conn.network.ports()
        		port = next((i for i in ports if i['fixed_ips'][0]['ip_address'] == server_ip_address),None)
 		if port is None:
@@ -265,28 +288,33 @@ class Utils:
 		server = self.conn.get_server_by_id(port.device_id)
 		return server.name
 
-	def show_router_ports(self):
-		routers = self.conn.network.routers(project_id = self.conn.current_project_id ) 	
+	def manage_routers_pat(self):
 		clear()
-
-		tables = [] 
+		# list project routers 
+		routers = self.conn.network.routers(project_id = self.conn.current_project_id ) 	
+		
 		for router in routers: 
-			qrouter = 'qrouter-' + router.id
-			x = requests.get('http://controller:3000/router_allports?router={}'.format(qrouter)).json()
+			payload = {
+				'router_id': 'qrouter-' + router.id
+			}
+			url = self.config['api']['router_pat']
+			x = requests.get(url = url, params = payload).json()
+
 			table = PrettyTable()
 			table.field_names = ["Server", "Server IP", "Server Port", "Router Port",
 				     	     "Router name", "Gateway" ]
-		        table.sortby = 'Router name'
+		        table.sortby = 'Server'
 			for key,value in x.items():
-				
-				server_name = self.get_vm_name_by_ip(key.split(":")[0])
-				table.add_row([server_name,key.split(":")[0], key.split(":")[1], value,
-				      router.name, router.external_gateway_info['external_fixed_ips'][0]['ip_address']])
-			tables.append({"name":router.name, "table":table})	
+				server_name = self.get_server_name_by_ip(key.split(":")[0])
+				table.add_row([ server_name, # server
+						key.split(":")[0], # server ip
+						key.split(":")[1], # serverport
+						value, # router port
+				      		router.name, # router name
+						router.external_gateway_info['external_fixed_ips'][0]['ip_address']]) # gateway
+			print('Router [{}]').format(router.name)
+			print(table)
 		
-		for x in tables:
-			print(x['name'])	
-			print(x['table'])
 		_exit = raw_input('Enter anything')
 
 
