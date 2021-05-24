@@ -6,7 +6,7 @@ import getpass
 import os
 
 os.system('clear')
-print('----------------- PAT CLI ------------------')
+print('----------------- CLI PROXY  ------------------')
 username = raw_input('Username: ')
 password = getpass.getpass('Password: ')
 cfg = os.getcwd()+ '/config'

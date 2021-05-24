@@ -1,0 +1,51 @@
+	# create floating ip attach to vm
+	def create_floating_ip(self):
+
+		#return self.conn.create_floating_ip(network=_network ,server=_server ,nat_destination=_nat_net,port=port_id)
+		try:
+                        clear()
+                        server = self.choose_server()
+                        vm_routers = self.vm_topo(server)
+			provider_networks = self.conn.network.networks(is_router_external = True , is_shared = True ,provider_physical_network='provider' )
+			for i,net in enumerate(provider_networks) :
+				print('{}.{}').format(i,net.name)
+			if not provider_networks:
+				raise Exception('No provider network created to provide floating ip')
+			name = raw_input('Choose provider: ')
+				
+			provider_network = next((i for i in self.conn.network.networks(is_router_external = True , is_shared = True ,provider_physical_network='provider' ) if i.name == name),None)
+			
+			if provider_network is None:
+				raise Exception('You type wrong name')	
+			print('Floating available:')
+			ips = self.conn.network.ips(project_id=self.conn.current_project_id, floating_network_id = provider_network.id,status='DOWN')	
+			for i in ips:
+				print(i.floating_ip_address)
+
+			ports = self.conn.compute.get("/servers/{}/os-interface".format(server.id)).json()['interfaceAttachments']
+			print('Vm interface port:')
+			for p in ports:
+				print(p['fixed_ips'][0]['ip_address'])
+			
+			ip = raw_input('Enter ip of vm port: ')
+			port = next((i for i in ports if ip == i['fixed_ips'][0]['ip_address']),None)
+			if port is None:
+				raise Exception('You type wrong port')
+			choice = raw_input('Choose floating ip or type "new" to create new one:') 
+			if choice == "new":
+				ip = self.conn.create_floating_ip(network=provider_network.id,server=server,nat_destination=port['net_id'],port=port['port_id'])	
+			else:
+				#self.conn.compute.add_floating_ip_to_server(server,choice,port['fixed_ips'][0]['ip_address'])	
+				_floating = next((i for i in self.conn.network.ips(project_id=self.conn.current_project_id, floating_network_id = provider_network.id,status='DOWN') if choice == i.floating_ip_address),None)
+				if _floating is not None:
+					self.conn.compute.add_floating_ip_to_server(server,_floating.floating_ip_address,port['fixed_ips'][0]['ip_address'])
+				else: 
+					floating_ip = self.conn.network.create_ip(floating_ip_address = choice,floating_network_id = provider_network.id, project_id = self.conn.current_project_id,
+									port_id = port['port_id'])
+				
+				 
+				
+                except Exception as e:
+                        print(e)
+                finally:
+			_exit = raw_input('Press any thing to continue')	

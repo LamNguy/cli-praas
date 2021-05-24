@@ -12,7 +12,4 @@ payload = {
 #print(r.text)
 #x = requests.post('http://192.168.0.105:3000/remove?server={}&router={}&vmport={}&gateway={}'.format(server,router,vmport,gateway))
 
-l = [u'192.168.30.43', u'192.168.30.44']
-string = ','.join(l)
-print(string)
 
