@@ -10,13 +10,18 @@ clear = lambda:os.system('clear')
 
 class Utils:
 
-	def __init__ ( self, conn,config):
+	def __init__ ( self, conn, config, logger):
 		self.conn = conn
 		self.select = True
 		self.config = config
-		
-		
+		self.logger = logger
 
+	def check_port ( self, port ):
+		assert isinstance(int(port), int), 'Input wrong type!'
+                assert int(port) in range (1,65535), 'Invalid value range, allowed is (1,65535)'
+
+		
+	# Select server ip address, if server has only one nic, auto assign this ip instead of selecting
 	def select_ip (self, server):
 		if len(server.addresses) == 1:
 			server_ip =  server.addresses[list(server.addresses.keys())[0]][0]['addr']	
@@ -29,10 +34,11 @@ class Utils:
 			#if (server.name != self.get_server_name_by_ip(server_ip)):
                         #	raise Exception('Incorrect ip')
 		return server_ip
-	
-	def select_router (self,server_routers):
+
+	# Select router, if server is associated with only one router, auto assign this router instead of selecting
+	def select_router (self,server_routers, server_name):
 		if len(server_routers) == 0 :
-			raise Exception ('Can not detect router for this server')
+			raise Exception ('Can not detect router for server {}'.format(server_name))
 		elif len(server_routers) == 1:
 			return server_routers[0]
 		else:
@@ -46,12 +52,12 @@ class Utils:
                 	#	raise Exception('Router is not existed')
 			return server_routers[index] 
 
-	# Get servers's metadata. 
+	# Get servers's metadata [ index, name, ips ] 
 	def get_servers(self):
 		return [dict( index=index , name = s.name ,
 			ips = [ s.addresses[i][0]['addr'] for i  in s.addresses.keys()])  for (index,s) in enumerate(self.conn.compute.servers())]
 
-	# Display list of servers and choose server.
+	# List servers in project and choose specific server.
 	def choose_server(self):
 		print('Listing servers in project')
 		table = PrettyTable()
@@ -63,7 +69,7 @@ class Utils:
 		choose = raw_input('Choose server name?: ')
 		server = next(( s for s in self.conn.compute.servers() if s.name == choose ),None)
 		if server is None:
-			raise Exception('Server is not existed')
+			raise Exception('Server {} is not existed'.format(choose))
 		return server 
 	
 	# Get server networks id from its port attachment 
@@ -71,7 +77,7 @@ class Utils:
 		interface_server_attachments = self.conn.compute.get("/servers/{}/os-interface".format(server_id)).json()['interfaceAttachments']
 		return [p['net_id'] for p in interface_server_attachments]
 
-	# Get routers instance which belong to a server.
+	# Get routers associated to a server.
 	def get_server_routers(self, server ):
 		
 		# get server networks
@@ -105,6 +111,7 @@ class Utils:
 			}
 			url = self.config['api']['router_server_pat']
                         x = requests.get(url = url, params = payload)          
+			self.logger.info('server_pat_routers with params {}'.format(payload))
                         for key,value in x.json().iteritems():
                                 table.add_row([server.name, ip , key, value, gateway])
 			print('Router [{}]').format(router.router_name)
@@ -126,10 +133,10 @@ class Utils:
 			self.server_pat_routers(server_routers, server, ip)
 			
 			# select router in server routers
-			router = self.select_router(server_routers)
+			router = self.select_router(server_routers, server.name)
 				
-			server_port = input('Server port you want to open? ') 
-			assert isinstance(int(server_port), int), 'Argument of wrong type!'
+			server_port = raw_input('Server port you want to open? ') 
+			self.check_port(server_port)
 			payload = {
 			    	'server_ip': ip,
 				'router_id': 'qrouter-' + router.router_id,
@@ -137,7 +144,9 @@ class Utils:
     				'gateway': router.router_gateway.fixed_ips[0]['ip_address']
 			}
 			url = self.config['api']['create_pat']
+			
 			create_response = requests.post(url = url, params = payload).json()	
+			self.logger.debug('Create pat request with params {}'.format(payload))
 			table = PrettyTable()
                         table.field_names = ["Status", "Server", "Server Port", "Router Port", "Gateway","Description"]
 			if create_response['status'] == 'SUCCESS':
@@ -162,8 +171,8 @@ class Utils:
 			print(table)
 			
 		except Exception as e:
+			self.logger.error(e)	
 			print(e)
-			print('Invalid input')
 		finally:
 			_exit = raw_input('Press Enter to exit')
 
@@ -183,11 +192,13 @@ class Utils:
                         self.server_pat_routers(server_routers, server, ip)
 
                         # select router in server routers
-                        router = self.select_router(server_routers)
+                        router = self.select_router(server_routers, server.name)
+			
 			server_port = input('Server port you want to change? ')
-			assert isinstance(int(server_port), int), 'Argument of wrong type!'
+			self.check_port(server_port)
                         new_router_port = input('Modify router port? ')
-			assert isinstance(int(new_router_port), int), 'Argument of wrong type!'
+			self.check_port(new_router_port)
+			#assert isinstance(int(new_router_port), int), 'Argument of wrong type!'
 
 			payload = {
                                 'server_ip': ip,
@@ -199,6 +210,7 @@ class Utils:
 	
 			url = self.config['api']['modify_pat']
 			modify_response = requests.post(url = url, params = payload).json()
+			self.logger.debug('modify request pat with params: {}'.format(payload))
 			table = PrettyTable()
                         table.field_names = ["Status", "Server", "Server Port", "Old Router Port",'New Router Port', "Gateway", "Description"]
                         if modify_response['status'] == 'NO CREATED':
@@ -233,7 +245,7 @@ class Utils:
 
 		except Exception as e:
 			print(e)
-			print('Invalid input')
+			self.logger.error(e)
 		finally:
 			_exit = raw_input('Press Enter to exit')
 
@@ -254,10 +266,12 @@ class Utils:
                         self.server_pat_routers(server_routers, server, ip)
 
                         # select router in server routers
-                        router = self.select_router(server_routers)
+                        router = self.select_router(server_routers, server.name)
+			
 
                         server_port = input('Server port you want to remove? ')
-                        assert isinstance(int(server_port), int), 'Argument of wrong type!'
+			self.check_port(server_port)
+                        #assert isinstance(int(server_port), int), 'Argument of wrong type!'
 			payload = {
                                 'server_ip': ip,
                                 'router_id': 'qrouter-' + router.router_id,
@@ -267,6 +281,7 @@ class Utils:
 		
 			url = self.config['api']['remove_pat']
 			remove_response = requests.post(url= url, params = payload).json()
+			self.logger.debug('remove pat request with params {}'.format(payload))
 			table = PrettyTable()
                         table.field_names = ["Status", "Server", "Server Port", "Router Port", "Gateway","Description"]
                         if remove_response['status'] == 'REMOVED':
@@ -290,20 +305,20 @@ class Utils:
 			
 		except Exception as e:
 			print(e)
-			print('Invalid input')
+			self.logger.error(e)
 		finally:
 			_exit = raw_input('Press Enter to exit')
 	# show instance's network topology
 
-	def server_topology(self):
-		try:
-			clear()
-			server = self.choose_server()
-			x = self.server_topo(server)	
-		except Exception as e:
-			print(e)
-		finally:
-			_exit = raw_input('Press Enter to exit')
+	#def server_topology(self):
+	#	try:
+	#		clear()
+	#		server = self.choose_server()
+	#		x = self.server_topo(server)	
+	#	except Exception as e:
+	#		print(e)
+	#	finally:
+	#		_exit = raw_input('Press Enter to exit')
 
 	def server_topo(self, server ):
 
@@ -357,11 +372,12 @@ class Utils:
 		try:
 			options = [ p.name for p in self.conn.identity.user_projects(self.conn.current_user_id)]
 			project, index = pick(options, title)
+			self.logger.info('Change to project {}'.format(project))
 			_conn = self.conn.connect_as_project(project)
 			_conn.authorize()
 			self.conn = _conn
 		except Exception as e:
-			print(e)
+			self.logger.error(e)	
 
 
 	# re-login with another user
@@ -377,10 +393,11 @@ class Utils:
 			_conn = self.conn.connect_as(username=username, password=password)
 			_conn.authorize()
 			self.conn = _conn
+			self.logger.info('Relogin with user {}'.format(username))
 			print('Login successfully')
 		except Exception as e :
-			print(e)
-			print('Re-loggin failed')
+			print('Login fail')
+			self.logger.error(e)
 		finally:
 			_exit = raw_input('Press Enter to continue')
 				
@@ -401,17 +418,17 @@ class Utils:
 			#print('TABLE OF OPTIONS\n1. Add PAT\n2. Modify PAT\n3. Remove PAT\n4. Manage Router PAT\n5. Server Network Topology\n6. Change project\n7. Change user\n8. Quit')
 			title = 'Welcome user: [{}]\nCurrent Project: [{}]'.format(self.conn.identity.get_user(self.conn.current_user_id).name,self.conn.current_project.name)
 			options = [ '1. Add PAT' , '2. Modify PAT', '3. Remove PAT','4. Manage Router PAT',
-					'5. Server Network Topology', '6. Change project', '7. Change user', '8. Quit' ]
+				    '5. Change project', '6. Change user', '7. Quit' ]
 			option, index = pick(options, title)
 			switcher = {
 				'1': self.create_pat_request,
 				'2': self.modify_pat_request,
 				'4': self.manage_routers_pat_request,
 				'3': self.remove_pat_request,
-				'5': self.server_topology,
-				'6': self.change_project,
-				'7': self.change_user,
-				'8': self.quit 
+				#'5': self.server_topology,
+				'5': self.change_project,
+				'6': self.change_user,
+				'7': self.quit 
 			}
 			func = switcher.get(str(index+1),self.invalid)()
 
@@ -427,27 +444,29 @@ class Utils:
 	def manage_routers_pat_request(self):
 		clear()
 		# list project routers 
-		routers = self.conn.network.routers(project_id = self.conn.current_project_id ) 	
-		
-		for router in routers: 
-			payload = {
-				'router_id': 'qrouter-' + router.id
-			}
-			url = self.config['api']['router_pat']
-			x = requests.get(url = url, params = payload).json()
-
-			table = PrettyTable()
-			table.field_names = ["Server", "Server IP", "Server Port", "Router Port", "Gateway" ]
-		        table.sortby = 'Server'
-			for key,value in x.items():
-				server_name = self.get_server_name_by_ip(key.split(":")[0])
-				table.add_row([ server_name, # server
-						key.split(":")[0], # server ip
-						key.split(":")[1], # serverport
-						value, # router port
-						router.external_gateway_info['external_fixed_ips'][0]['ip_address']]) # gateway
-			print('Router [{}]').format(router.name)
-			print(table)
-		
-		_exit = raw_input('Press Enter to exit')
+		try:
+			routers = self.conn.network.routers(project_id = self.conn.current_project_id ) 	
+			
+			for router in routers: 
+				payload = {
+					'router_id': 'qrouter-' + router.id
+				}
+				url = self.config['api']['router_pat']
+				x = requests.get(url = url, params = payload).json()
+				table = PrettyTable()
+				table.field_names = ["Server", "Server IP", "Server Port", "Router Port", "Gateway" ]
+		        	table.sortby = 'Server'
+				for key,value in x.items():
+					server_name = self.get_server_name_by_ip(key.split(":")[0])
+					table.add_row([ server_name, # server
+							key.split(":")[0], # server ip
+							key.split(":")[1], # serverport
+							value, # router port
+							router.external_gateway_info['external_fixed_ips'][0]['ip_address']]) # gateway
+				print('Router [{}]').format(router.name)
+				print(table)
+		except Exception as e:
+			self.logger.info(e)
+		finally:
+			_exit = raw_input('Press Enter to exit')
 

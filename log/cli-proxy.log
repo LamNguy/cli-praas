@@ -1,0 +1,41 @@
+2021-05-25 02:12:33,831 - cli-proxy - Level:ERROR - HttpException: 401: Client Error for url: http://controller:5000/v3/auth/tokens, The request you have made requires authentication.
+2021-05-25 02:12:42,005 - cli-proxy - Level:ERROR - HttpException: 401: Client Error for url: http://controller:5000/v3/auth/tokens, The request you have made requires authentication.
+2021-05-25 03:42:58,286 - cli-proxy - Level:ERROR - global name 'logger' is not defined
+2021-05-25 03:43:41,046 - cli-proxy - Level:ERROR - global name 'logger' is not defined
+2021-05-25 03:44:32,978 - cli-proxy - Level:ERROR - invalid value range
+2021-05-25 03:44:46,320 - cli-proxy - Level:ERROR - invalid value range
+2021-05-25 03:46:28,905 - cli-proxy - Level:ERROR - invalid value range: -77
+2021-05-25 03:46:44,052 - cli-proxy - Level:ERROR - invalid value range: 99999
+2021-05-25 04:02:18,305 - cli-proxy - Level:ERROR - global name 'server_port' is not defined
+2021-05-25 04:02:29,392 - cli-proxy - Level:ERROR - global name 'server_port' is not defined
+2021-05-25 04:03:16,558 - cli-proxy - Level:ERROR - Invalid value range, allowed is (1,65535)
+2021-05-25 04:03:25,040 - cli-proxy - Level:ERROR - name 'a' is not defined
+2021-05-25 04:03:35,928 - cli-proxy - Level:ERROR - Invalid value range, allowed is (1,65535)
+2021-05-25 04:06:06,750 - cli-proxy - Level:ERROR - invalid literal for int() with base 10: 'a'
+2021-05-25 04:21:01,972 - cli-proxy - Level:ERROR - Can not detect router for this server
+2021-05-25 04:24:21,755 - cli-proxy - Level:ERROR - Server is not existed
+2021-05-25 04:27:12,271 - cli-proxy - Level:INFO - Create pat request with params:
+2021-05-25 04:28:44,096 - cli-proxy - Level:INFO - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '9093', 'server_ip': u'192.168.30.63', 'gateway': u'192.168.0.63'}
+2021-05-25 04:35:48,003 - cli-proxy - Level:ERROR - Can not detect router for server cirros
+2021-05-25 04:39:35,213 - cli-proxy - Level:ERROR - Server is not existed
+2021-05-25 04:40:58,670 - cli-proxy - Level:ERROR - Server adad is not existed
+2021-05-25 04:47:43,471 - cli-proxy - Level:DEBUG - server_pat_routers with params http://controller:3000/router_server_pat
+2021-05-25 04:47:45,869 - cli-proxy - Level:DEBUG - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '9093', 'server_ip': u'192.168.30.63', 'gateway': u'192.168.0.63'}
+2021-05-25 04:53:17,430 - cli-proxy - Level:ERROR - Server centos3 is not existed
+2021-05-25 04:53:25,922 - cli-proxy - Level:ERROR - Server centos22 is not existed
+2021-05-25 04:53:33,963 - cli-proxy - Level:DEBUG - server_pat_routers with params {'router': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server': u'192.168.30.63'}
+2021-05-25 04:53:39,446 - cli-proxy - Level:ERROR - Invalid value range, allowed is (1,65535)
+2021-05-25 04:53:56,711 - cli-proxy - Level:DEBUG - server_pat_routers with params {'router': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server': u'192.168.30.63'}
+2021-05-25 04:54:04,767 - cli-proxy - Level:ERROR - name 'aaa' is not defined
+2021-05-25 04:54:15,136 - cli-proxy - Level:DEBUG - server_pat_routers with params {'router': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server': u'192.168.30.63'}
+2021-05-25 04:54:25,328 - cli-proxy - Level:DEBUG - modify request pat with params: {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'modify_server_port': 24, 'modify_router_port': 4022, 'server_ip': u'192.168.30.63', 'gateway': u'192.168.0.63'}
+2021-05-25 06:11:39,793 - cli-proxy - Level:ERROR - [Errno 2] No such file or directory: '/log/openstack.log'
+2021-05-25 06:13:27,189 - cli-proxy - Level:INFO - server_pat_routers with params {'router': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server': u'192.168.30.63'}
+2021-05-25 06:13:50,858 - cli-proxy - Level:INFO - server_pat_routers with params {'router': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server': u'192.168.30.63'}
+2021-05-25 06:13:54,077 - cli-proxy - Level:DEBUG - remove pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'remove_server_port': 9093, 'gateway': u'192.168.0.63', 'server_ip': u'192.168.30.63'}
+2021-05-25 06:14:03,502 - cli-proxy - Level:INFO - server_pat_routers with params {'router': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server': u'192.168.30.63'}
+2021-05-25 06:14:05,390 - cli-proxy - Level:DEBUG - remove pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'remove_server_port': 9093, 'gateway': u'192.168.0.63', 'server_ip': u'192.168.30.63'}
+2021-05-25 06:39:04,221 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-25 06:41:10,941 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-25 06:41:20,523 - cli-proxy - Level:INFO - Relogin with user duclam
+2021-05-25 06:42:18,518 - cli-proxy - Level:INFO - Change to project myProject
