@@ -39,3 +39,18 @@
 2021-05-25 06:41:10,941 - cli-proxy - Level:INFO - Change to project myProject
 2021-05-25 06:41:20,523 - cli-proxy - Level:INFO - Relogin with user duclam
 2021-05-25 06:42:18,518 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-25 10:52:15,807 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-25 10:52:20,132 - cli-proxy - Level:INFO - Utils instance has no attribute 'magic'
+2021-05-25 10:53:14,836 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-25 10:53:19,552 - cli-proxy - Level:INFO - __init__() got an unexpected keyword argument 'option_map_func'
+2021-05-25 10:54:05,551 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-25 10:54:09,107 - cli-proxy - Level:INFO - magic() takes exactly 1 argument (2 given)
+2021-05-25 10:54:42,268 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-25 10:55:00,521 - cli-proxy - Level:INFO - Expecting value: line 1 column 1 (char 0)
+2021-05-25 10:55:48,979 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-25 10:55:54,137 - cli-proxy - Level:INFO - 'dict' object has no attribute 'external_gateway_info'
+2021-05-25 10:56:46,625 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-25 10:56:51,701 - cli-proxy - Level:INFO - 'dict' object has no attribute 'external_gateway_info'
+2021-05-25 10:56:57,230 - cli-proxy - Level:INFO - 'dict' object has no attribute 'external_gateway_info'
+2021-05-25 11:00:03,025 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-25 11:00:21,950 - cli-proxy - Level:INFO - Change to project myProject

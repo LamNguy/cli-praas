@@ -441,30 +441,40 @@ class Utils:
 		server = self.conn.get_server_by_id(port.device_id)
 		return server.name
 
+
+	def magic (self, options):
+		return options.get('name')
 	def manage_routers_pat_request(self):
 		clear()
 		# list project routers 
 		try:
 			routers = self.conn.network.routers(project_id = self.conn.current_project_id ) 	
 			
-			for router in routers: 
-				payload = {
-					'router_id': 'qrouter-' + router.id
-				}
-				url = self.config['api']['router_pat']
-				x = requests.get(url = url, params = payload).json()
-				table = PrettyTable()
-				table.field_names = ["Server", "Server IP", "Server Port", "Router Port", "Gateway" ]
-		        	table.sortby = 'Server'
-				for key,value in x.items():
-					server_name = self.get_server_name_by_ip(key.split(":")[0])
-					table.add_row([ server_name, # server
-							key.split(":")[0], # server ip
-							key.split(":")[1], # serverport
-							value, # router port
-							router.external_gateway_info['external_fixed_ips'][0]['ip_address']]) # gateway
-				print('Router [{}]').format(router.name)
-				print(table)
+			title = 'List router in project'
+
+                        options = [ {'name':p.name, 'id':p.id , 
+				'gateway': p.external_gateway_info['external_fixed_ips'][0]['ip_address']}  for p in routers ]
+                        router , index = pick(options, title, options_map_func = self.magic)
+			
+			payload = {
+				'router_id': 'qrouter-' + router['id']
+			}
+
+			url = self.config['api']['router_pat']
+			x = requests.get(url = url, params = payload).json()
+			self.logger.debug('manage routers pat request on router {}'.format(payload))
+			table = PrettyTable()
+			table.field_names = ["Server", "Server IP", "Server Port", "Router Port", "Gateway" ]
+		        table.sortby = 'Server'
+			for key,value in x.items():
+				server_name = self.get_server_name_by_ip(key.split(":")[0])
+				table.add_row([ server_name, # server
+						key.split(":")[0], # server ip
+						key.split(":")[1], # serverport
+						value, # router port
+						router['gateway']]) # gateway
+			print('Router [{}]').format(router['name'])
+			print(table)
 		except Exception as e:
 			self.logger.info(e)
 		finally:
