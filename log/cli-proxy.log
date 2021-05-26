@@ -54,3 +54,81 @@
 2021-05-25 10:56:57,230 - cli-proxy - Level:INFO - 'dict' object has no attribute 'external_gateway_info'
 2021-05-25 11:00:03,025 - cli-proxy - Level:INFO - Change to project myProject
 2021-05-25 11:00:21,950 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-26 08:41:38,087 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-26 08:41:48,485 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 08:41:48,485 - cli-proxy - Level:ERROR - Expecting value: line 1 column 1 (char 0)
+2021-05-26 08:42:24,888 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 08:42:27,768 - cli-proxy - Level:DEBUG - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '28', 'server_ip': u'192.168.30.63', 'gateway': u'192.168.0.63'}
+2021-05-26 08:42:59,889 - cli-proxy - Level:DEBUG - manage routers pat request on router {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390'}
+2021-05-26 08:43:39,093 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 08:43:41,556 - cli-proxy - Level:DEBUG - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '28', 'server_ip': u'192.168.30.63', 'gateway': u'192.168.0.63'}
+2021-05-26 08:48:46,017 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 08:48:48,419 - cli-proxy - Level:DEBUG - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '28', 'server_ip': u'192.168.30.63', 'gateway': u'192.168.0.63'}
+2021-05-26 08:51:33,719 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-26 08:51:38,866 - cli-proxy - Level:DEBUG - manage routers pat request on router {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390'}
+2021-05-26 08:52:12,546 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 08:52:36,643 - cli-proxy - Level:ERROR - HTTPConnectionPool(host='controller', port=3000): Max retries exceeded with url: /pat/create?router_id=qrouter-551d6a88-088b-4275-8f29-b448f8787390&create_server_port=44&server_ip=192.168.30.63&gateway=192.168.0.63 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f32e68c2a10>: Failed to establish a new connection: [Errno 111] Connection refused',))
+2021-05-26 09:21:41,009 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-26 09:22:17,653 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 09:22:17,653 - cli-proxy - Level:ERROR - Expecting value: line 1 column 1 (char 0)
+2021-05-26 09:24:47,896 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 09:24:47,897 - cli-proxy - Level:ERROR - Expecting value: line 1 column 1 (char 0)
+2021-05-26 09:30:48,148 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 09:30:52,412 - cli-proxy - Level:DEBUG - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '28', 'server_ip': u'192.168.30.63', 'gateway': u'192.168.0.63'}
+2021-05-26 09:42:33,884 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-26 09:42:43,060 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 09:42:46,061 - cli-proxy - Level:DEBUG - remove pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'remove_server_port': 28, 'gateway': u'192.168.0.63', 'server_ip': u'192.168.30.63'}
+2021-05-26 09:55:47,060 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 09:55:49,110 - cli-proxy - Level:ERROR - invalid literal for int() with base 10: ''
+2021-05-26 09:55:58,929 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 09:56:01,226 - cli-proxy - Level:DEBUG - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '22', 'server_ip': u'192.168.30.63', 'gateway': u'192.168.0.63'}
+2021-05-26 09:56:09,526 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 09:56:10,928 - cli-proxy - Level:DEBUG - remove pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'remove_server_port': 22, 'gateway': u'192.168.0.63', 'server_ip': u'192.168.30.63'}
+2021-05-26 09:56:44,997 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-26 09:56:50,034 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-26 09:57:03,338 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.108'}
+2021-05-26 09:57:05,403 - cli-proxy - Level:DEBUG - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '22', 'server_ip': u'192.168.30.108', 'gateway': u'192.168.0.63'}
+2021-05-26 16:34:20,105 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-26 16:34:24,585 - cli-proxy - Level:DEBUG - manage routers pat request on router {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390'}
+2021-05-26 16:34:31,769 - cli-proxy - Level:DEBUG - manage routers pat request on router {'router_id': u'qrouter-766b8c59-b0d3-4b6a-8027-614fa2291490'}
+2021-05-26 16:34:53,193 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 16:34:56,355 - cli-proxy - Level:DEBUG - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '22', 'server_ip': u'192.168.30.63', 'gateway': u'192.168.0.63'}
+2021-05-26 16:35:05,752 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.31.115'}
+2021-05-26 16:35:11,604 - cli-proxy - Level:ERROR - invalid literal for int() with base 10: 'aa'
+2021-05-26 16:35:21,967 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.108'}
+2021-05-26 16:35:24,316 - cli-proxy - Level:ERROR - Expecting value: line 1 column 1 (char 0)
+2021-05-26 16:37:39,617 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.31.115'}
+2021-05-26 16:37:43,709 - cli-proxy - Level:DEBUG - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '22', 'server_ip': u'192.168.31.115', 'gateway': u'192.168.0.63'}
+2021-05-26 16:37:53,884 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.108'}
+2021-05-26 16:37:55,171 - cli-proxy - Level:ERROR - Expecting value: line 1 column 1 (char 0)
+2021-05-26 16:40:02,231 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.108'}
+2021-05-26 16:40:03,586 - cli-proxy - Level:ERROR - Expecting value: line 1 column 1 (char 0)
+2021-05-26 16:41:10,005 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.31.115'}
+2021-05-26 16:41:11,784 - cli-proxy - Level:DEBUG - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '22', 'server_ip': u'192.168.31.115', 'gateway': u'192.168.0.63'}
+2021-05-26 16:41:22,764 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.31.115'}
+2021-05-26 16:41:25,258 - cli-proxy - Level:ERROR - invalid literal for int() with base 10: '2a'
+2021-05-26 16:41:35,114 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.242'}
+2021-05-26 16:41:38,069 - cli-proxy - Level:DEBUG - Create pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'create_server_port': '26', 'server_ip': u'192.168.30.242', 'gateway': u'192.168.0.63'}
+2021-05-26 16:41:43,375 - cli-proxy - Level:DEBUG - manage routers pat request on router {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390'}
+2021-05-26 16:41:58,954 - cli-proxy - Level:DEBUG - manage routers pat request on router {'router_id': u'qrouter-766b8c59-b0d3-4b6a-8027-614fa2291490'}
+2021-05-26 16:42:04,526 - cli-proxy - Level:DEBUG - manage routers pat request on router {'router_id': u'qrouter-766b8c59-b0d3-4b6a-8027-614fa2291490'}
+2021-05-26 16:42:25,866 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 16:42:28,795 - cli-proxy - Level:DEBUG - remove pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'remove_server_port': 23, 'gateway': u'192.168.0.63', 'server_ip': u'192.168.30.63'}
+2021-05-26 16:42:40,293 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 16:42:41,409 - cli-proxy - Level:ERROR - name 'aa' is not defined
+2021-05-26 16:43:03,632 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.31.115'}
+2021-05-26 16:43:05,165 - cli-proxy - Level:DEBUG - remove pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'remove_server_port': 22, 'gateway': u'192.168.0.63', 'server_ip': u'192.168.31.115'}
+2021-05-26 16:43:13,602 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 16:43:17,099 - cli-proxy - Level:ERROR - unexpected EOF while parsing (<string>, line 1)
+2021-05-26 16:43:30,911 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.31.115'}
+2021-05-26 16:43:32,922 - cli-proxy - Level:ERROR - unexpected EOF while parsing (<string>, line 0)
+2021-05-26 16:43:43,949 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 16:43:46,604 - cli-proxy - Level:DEBUG - remove pat request with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'remove_server_port': 23, 'gateway': u'192.168.0.63', 'server_ip': u'192.168.30.63'}
+2021-05-26 16:43:58,730 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 16:44:05,993 - cli-proxy - Level:DEBUG - modify request pat with params: {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'modify_server_port': 22, 'modify_router_port': 4095, 'server_ip': u'192.168.30.63', 'gateway': u'192.168.0.63'}
+2021-05-26 16:44:30,157 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.31.115'}
+2021-05-26 16:44:33,300 - cli-proxy - Level:DEBUG - modify request pat with params: {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'modify_server_port': 22, 'modify_router_port': 222, 'server_ip': u'192.168.31.115', 'gateway': u'192.168.0.63'}
+2021-05-26 16:44:40,627 - cli-proxy - Level:INFO - server_pat_routers with params {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'server_ip': u'192.168.30.63'}
+2021-05-26 16:44:50,534 - cli-proxy - Level:DEBUG - modify request pat with params: {'router_id': u'qrouter-551d6a88-088b-4275-8f29-b448f8787390', 'modify_server_port': 22, 'modify_router_port': 4096, 'server_ip': u'192.168.30.63', 'gateway': u'192.168.0.63'}
+2021-05-26 16:44:57,885 - cli-proxy - Level:INFO - Change to project myProject
+2021-05-26 16:45:07,027 - cli-proxy - Level:INFO - Relogin with user duclam

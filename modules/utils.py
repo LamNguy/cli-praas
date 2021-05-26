@@ -106,8 +106,8 @@ class Utils:
 			
 			gateway = router.router_gateway.fixed_ips[0]['ip_address']
 			payload = {
-				'router': 'qrouter-' + router.router_id,
-				'server': ip
+				'router_id': 'qrouter-' + router.router_id,
+				'server_ip': ip
 			}
 			url = self.config['api']['router_server_pat']
                         x = requests.get(url = url, params = payload)          
