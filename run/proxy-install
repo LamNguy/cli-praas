@@ -1,0 +1,4 @@
+export OS_CLIENT_CONFIG_FILE=0
+yum install epel-release -y
+yum install centos-release-openstack-train -y
+yum install python2-openstacksdk -y

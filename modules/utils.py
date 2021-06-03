@@ -375,6 +375,7 @@ class Utils:
 			self.logger.info('Change to project {}'.format(project))
 			_conn = self.conn.connect_as_project(project)
 			_conn.authorize()
+			self.logger.info(_conn.authorize())
 			self.conn = _conn
 		except Exception as e:
 			self.logger.error(e)	
