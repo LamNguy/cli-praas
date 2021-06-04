@@ -3,7 +3,7 @@ with open ("README.md", "r") as f:
 	long_description = f.read()
 
 setup(
-    name='CLI Proxy Service',
+    name='cli-proxy-openstack',
     version='0.1.1',
     author='Nguyen Duc Lam',
     author_email='lamchipabc@gmail.com',
