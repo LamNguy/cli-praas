@@ -67,3 +67,5 @@ router_pat = http://controller:3000/router_pat
 ```
 $ cli-proxy
 ```
+#### 5. Note
+CLI will generate log file in the directory cli-praas directory.
