@@ -167,12 +167,13 @@ class Utils:
 			payload = {
 			    	'server_ip': ip,
 				'router_id': 'qrouter-' + router.router_id,
-    				'create_server_port': server_port,
+    				'create_server_port': str(server_port),
     				'gateway': router.router_gateway.fixed_ips[0]['ip_address']
 			}
 			url = self.config['api']['create_pat']
 			
 			create_response = requests.post(url = url, params = payload).json()	
+			self.logger.info(create_response)
 			self.logger.debug('Create pat request with params {}'.format(payload))
 			table = PrettyTable()
                         table.field_names = ["Status", "Server", "Server Port", "Router Port", "Gateway","Description"]
@@ -192,7 +193,7 @@ class Utils:
                                                 create_response['created_router_port'],
                                                 create_response['gateway'],
 						create_response['message']])	
-			elif create_response['status'] == 'ERROR':
+			else: 
 				table.add_row([ create_response['status'] , "", "", "", "", create_response['message']])
 			print(table)
 			
@@ -242,8 +243,8 @@ class Utils:
 			payload = {
                                 'server_ip': ip,
                                 'router_id': 'qrouter-' + router.router_id,
-                                'modify_server_port': server_port,
-				'modify_router_port': new_router_port,
+                                'modify_server_port': str(server_port),
+				'modify_router_port': str(new_router_port),
                                 'gateway': router.router_gateway.fixed_ips[0]['ip_address']
                         }
 	
@@ -324,7 +325,7 @@ class Utils:
 			payload = {
                                 'server_ip': ip,
                                 'router_id': 'qrouter-' + router.router_id,
-                                'remove_server_port': server_port,
+                                'remove_server_port':str(server_port),
                                 'gateway': router.router_gateway.fixed_ips[0]['ip_address']
                         }
 		
