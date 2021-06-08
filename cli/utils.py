@@ -1,4 +1,4 @@
-from modules.router import Router 
+from cli.router import Router 
 import json
 from prettytable import PrettyTable
 import requests

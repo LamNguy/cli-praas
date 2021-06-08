@@ -9,17 +9,17 @@ setup(
     author_email='lamchipabc@gmail.com',
     description='CLI for Proxy Service integrated with OpenStack',
     long_description_content_type="text/markdown",
-    url = 'https://github.com/LamNguy/cli_pat',
+    url = 'https://github.com/LamNguy/cli-praas',
     python_requires='>=2.7',
-    packages=['modules'],
+    packages=find_packages(),
     include_package_data=True,
     install_requires= [
 	'pick',
-	'pbr>=2.0.0',
+	'pbr',
 	'configparser',
 	'prettytable',
 	'openstacksdk==0.36.5'], 
     entry_points = {
-        'console_scripts': ['cli-proxy=modules.__main__:main'],
+        'console_scripts': ['cli-proxy=cli.__main__:main'],
     }
 )

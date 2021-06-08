@@ -1,5 +1,5 @@
-from modules.utils import Utils 
-from modules.connection import Connection
+from cli.utils import Utils 
+from cli.connection import Connection
 import openstack
 from  configparser import ConfigParser
 import getpass
