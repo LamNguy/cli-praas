@@ -395,7 +395,9 @@ class Utils:
 									s.router_name,
 									s.router_gateway.fixed_ips[0]['ip_address'],
 									gateway_network.name,
-									subnet_gateway.cidr)
+									subnet_gateway.cidr,
+									gateway_network.name,
+									ips.floating_ip_address)
                                         else:
                                                 print(topo_without_ips).format( fixed_ip['addr'],
 									interface_network.name,
