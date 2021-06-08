@@ -3,14 +3,14 @@ with open ("README.md", "r") as f:
 	readme = f.read()
 
 setup(
-    name='cli-proxy-openstack',
+    name='cli-praas',
     version='0.1.4',
     author='Nguyen Duc Lam',
     author_email='lamchipabc@gmail.com',
     description='CLI for Proxy Service integrated with OpenStack',
     long_description_content_type="text/markdown",
     url = 'https://github.com/LamNguy/cli-praas',
-    python_requires='>=2.7',
+    python_requires='>=2.7, <3.*',
     packages=find_packages(),
     include_package_data=True,
     install_requires= [
