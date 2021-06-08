@@ -31,7 +31,7 @@ $ deactivate
 ```
 __Clone the project__
 ```
-$ git clone https://github.com/LamNguy/cli_pat cli-praas
+$ git clone https://github.com/LamNguy/cli-praas 
 ```
 __Install packages__
 ```
